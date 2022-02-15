@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:socsem_flutter/widgets/button_widget.dart';
 
 class ReadingTimerPage extends StatefulWidget {
   @override
@@ -15,7 +16,21 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
   void initState() {
     super.initState();
 
-    startTimer();
+    reset();
+  }
+
+  void reset() {
+    setState(() => duration = Duration());
+  }
+
+  void stopTimer({bool resets = true}) {
+    if (resets) {
+      reset();
+    }
+
+    setState(() {
+      timer?.cancel();
+    });
   }
 
   void addTime() {
@@ -27,13 +42,21 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
     });
   }
 
-  void startTimer() {
+  void startTimer({bool resets = true}) {
+    if (resets) {
+      reset();
+    }
     timer = Timer.periodic(Duration(seconds: 1), (_) => addTime());
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        body: Center(child: buildTime()),
+        body: Column(children: [
+          const SizedBox(height: 200),
+          buildTime(),
+          const SizedBox(height: 80),
+          buildButtons()
+        ]),
       );
 
   Widget buildTime() {
@@ -67,4 +90,34 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
         const SizedBox(height: 24),
         Text(header)
       ]);
+
+  Widget buildButtons() {
+    final isRunning = timer == null ? false : timer!.isActive;
+    final isCompleted = duration.inSeconds == 0;
+    return isRunning || !isCompleted
+        ? Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ButtonWidget(
+                text: isRunning ? 'STOP' : "RESUME",
+                onClicked: () {
+                  if (isRunning) {
+                    stopTimer(resets: false);
+                  } else {
+                    startTimer(resets: false);
+                  }
+                },
+              ),
+              const SizedBox(width: 12),
+              ButtonWidget(text: 'CANCEL', onClicked: stopTimer)
+            ],
+          )
+        : ButtonWidget(
+            text: 'START TIMER!',
+            color: Colors.white,
+            backgroundColor: Colors.black,
+            onClicked: () {
+              startTimer();
+            });
+  }
 }
