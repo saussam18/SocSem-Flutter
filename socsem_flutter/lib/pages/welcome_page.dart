@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+// ignore: library_prefixes
 import 'package:socsem_flutter/utils/constants.dart' as Constants;
-import 'package:socsem_flutter/utils/navigate.dart';
 
 class WelcomePage extends StatelessWidget {
   @override

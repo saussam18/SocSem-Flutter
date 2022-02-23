@@ -4,7 +4,7 @@ import 'package:socsem_flutter/pages/welcome_page.dart';
 
 class Navigate {
   static Map<String, Widget Function(BuildContext)> routes = {
-    '/': (context) => ReadingTimerPage(),
+    '/': (context) => WelcomePage(),
     //'/sign-in': (context) => SignInPage(),
     '/home': (context) => ReadingTimerPage()
   };

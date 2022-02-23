@@ -1,7 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:socsem_flutter/pages/reading_timer_page.dart';
 import 'package:socsem_flutter/utils/constants.dart' as Constants;
 import 'package:socsem_flutter/utils/navigate.dart';
 
