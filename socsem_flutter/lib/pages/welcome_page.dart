@@ -10,7 +10,7 @@ class WelcomePage extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     User? result = FirebaseAuth.instance.currentUser;
     return Scaffold(
-        backgroundColor: Constants.PRIMARY,
+        backgroundColor: Colors.white,
         body: AnnotatedRegion<SystemUiOverlayStyle>(
             value: Constants.STATUS_BAR_COLOR,
             child: Center(
@@ -20,7 +20,7 @@ class WelcomePage extends StatelessWidget {
                   Image.asset('assets/images/logo.png'),
                   RichText(
                       textAlign: TextAlign.center,
-                      text: TextSpan(children: <TextSpan>[
+                      text: const TextSpan(children: <TextSpan>[
                         TextSpan(
                             text: Constants.INTRO1,
                             style: TextStyle(
@@ -42,7 +42,7 @@ class WelcomePage extends StatelessWidget {
                                 fontSize: 30.0)),
                       ])),
                   SizedBox(height: size.height * 0.01),
-                  Text(
+                  const Text(
                     Constants.INTROSUB,
                     style: TextStyle(color: Constants.WHITE),
                   ),
@@ -71,7 +71,7 @@ class WelcomePage extends StatelessWidget {
                     width: size.width * 0.8,
                     child: OutlinedButton(
                       onPressed: () {},
-                      child: Text(
+                      child: const Text(
                         Constants.SIGNIN,
                         style: TextStyle(color: Constants.BLACK),
                       ),
