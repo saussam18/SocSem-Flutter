@@ -10,7 +10,7 @@ class WelcomePage extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     User? result = FirebaseAuth.instance.currentUser;
     return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Constants.PRIMARY,
         body: AnnotatedRegion<SystemUiOverlayStyle>(
             value: Constants.STATUS_BAR_COLOR,
             child: Center(

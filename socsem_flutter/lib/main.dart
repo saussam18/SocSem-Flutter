@@ -14,13 +14,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: Constants.TITLE,
-      initialRoute: '/',
-      routes: Navigate.routes,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-    );
+        debugShowCheckedModeBanner: false,
+        title: Constants.TITLE,
+        initialRoute: '/',
+        routes: Navigate.routes);
   }
 }
