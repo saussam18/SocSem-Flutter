@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "838419536430-67bne5q7p3vevgon51sqi18qh032hcpr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.socsem_flutter",
+            "certificate_hash": "f949de41d1c6ca7f2b00db8482c9af2baf1764f7"
+          }
+        },
+        {
           "client_id": "838419536430-84vjvp3gbkbulatan9vjo2dq0k2nhdng.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,6 +37,13 @@
             {
               "client_id": "838419536430-84vjvp3gbkbulatan9vjo2dq0k2nhdng.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "838419536430-925p097mbtprpcfu3i0j3phq18t7i3ac.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.socsemFlutter"
+              }
             }
           ]
         }

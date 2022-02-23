@@ -37,8 +37,10 @@ dependencies:
   firebase_auth: ^1.2.0
   firebase_core: ^1.8.0
   firebase_database: ^8.0.1
+  firebase_analytics: ^5.0.2
   google_sign_in: ^5.0.4
   twitter_login: ^3.0.8
+  font_awesome_flutter: ^9.0.0
 
 dev_dependencies:
   flutter_test:
@@ -61,6 +63,8 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets: 
+    - assets/images/logo.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
