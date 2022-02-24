@@ -41,11 +41,7 @@ class WelcomePage extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 30.0)),
                       ])),
-                  SizedBox(height: size.height * 0.01),
-                  const Text(
-                    Constants.INTROSUB,
-                    style: TextStyle(color: Constants.WHITE),
-                  ),
+                  SizedBox(height: size.height * 0.02),
                   SizedBox(height: size.height * 0.1),
                   SizedBox(
                     width: size.width * 0.8,
@@ -59,10 +55,10 @@ class WelcomePage extends StatelessWidget {
                       },
                       child: Text(Constants.START),
                       style: ButtonStyle(
-                          foregroundColor: MaterialStateProperty.all<Color>(
+                          foregroundColor:
+                              MaterialStateProperty.all<Color>(Constants.BLACK),
+                          backgroundColor: MaterialStateProperty.all<Color>(
                               Constants.SECONDARY),
-                          backgroundColor:
-                              MaterialStateProperty.all<Color>(Constants.WHITE),
                           side: MaterialStateProperty.all<BorderSide>(
                               BorderSide.none)),
                     ),
