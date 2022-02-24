@@ -151,6 +151,7 @@ class _GoogleSignInState extends State<GoogleSignIn> {
                       context, Constants.ROUTE_HOME, (route) => false);
                 } catch (e) {
                   if (e is FirebaseAuthException) {
+                    print(e.message);
                     showMessage(e.message!);
                   }
                 }

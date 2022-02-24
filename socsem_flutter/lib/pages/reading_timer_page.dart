@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:socsem_flutter/widgets/button_widget.dart';
 
@@ -55,17 +56,28 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: Column(children: [
-          // Sized Box moves items up and down
-          const SizedBox(height: 200),
-          buildTime(),
-          const SizedBox(height: 80),
-          buildButtons()
-        ]),
-      );
+  Widget build(BuildContext context) {
+    User? user = FirebaseAuth.instance.currentUser;
+    Size size = MediaQuery.of(context).size;
+    return Scaffold(
+      body: Column(children: [
+        SizedBox(height: size.height * 0.20),
+        Text(user!.email!),
+        Text(user.displayName!),
+        CircleAvatar(
+          backgroundImage: NetworkImage(user.photoURL!),
+          radius: 20,
+        ),
+        SizedBox(height: size.height * 0.20),
+        buildTime(context),
+        SizedBox(height: size.height * 0.10),
+        buildButtons(context)
+      ]),
+    );
+  }
 
-  Widget buildTime() {
+  Widget buildTime(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     String twoDigits(int n) => n.toString().padLeft(2, '0');
     final hours = twoDigits(duration.inHours.remainder(60));
     final minutes = twoDigits(duration.inMinutes.remainder(60));
@@ -73,31 +85,35 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        buildTimeCard(time: hours, header: "HOURS"),
-        const SizedBox(width: 8),
-        buildTimeCard(time: minutes, header: "MINUTES"),
-        const SizedBox(width: 8),
-        buildTimeCard(time: seconds, header: "SECONDS"),
+        buildTimeCard(context, time: hours, header: "HOURS"),
+        SizedBox(width: size.width * 0.01),
+        buildTimeCard(context, time: minutes, header: "MINUTES"),
+        SizedBox(width: size.width * 0.01),
+        buildTimeCard(context, time: seconds, header: "SECONDS"),
       ],
     );
   }
 
-  Widget buildTimeCard({required String time, required String header}) =>
-      Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(20)),
-            child: Text(time,
-                style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                    fontSize: 72))),
-        const SizedBox(height: 24),
-        Text(header)
-      ]);
+  Widget buildTimeCard(BuildContext context,
+      {required String time, required String header}) {
+    Size size = MediaQuery.of(context).size;
+    return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+      Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(20)),
+          child: Text(time,
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  fontSize: 72))),
+      SizedBox(height: size.height * 0.04),
+      Text(header)
+    ]);
+  }
 
-  Widget buildButtons() {
+  Widget buildButtons(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     final isRunning = timer == null ? false : timer!.isActive;
     final isCompleted = duration.inSeconds == 0;
     return isRunning || !isCompleted
