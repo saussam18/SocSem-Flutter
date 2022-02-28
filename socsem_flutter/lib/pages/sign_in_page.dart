@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:socsem_flutter/services/FirebaseService.dart';
 import 'package:socsem_flutter/utils/constants.dart' as Constants;
+import 'package:socsem_flutter/utils/resource.dart';
+import 'package:socsem_flutter/widgets/sign_in_button.dart';
 
 class SignInPage extends StatelessWidget {
   @override
@@ -34,7 +36,12 @@ class SignInPage extends StatelessWidget {
             style: TextStyle(color: Constants.WHITE),
           ),
           SizedBox(height: size.height * 0.02),
-          GoogleSignIn(),
+          SignInButton(
+              loginType: LoginType.Google,
+              faIcon: FaIcon(FontAwesomeIcons.google)),
+          SignInButton(
+              loginType: LoginType.Twitter,
+              faIcon: FaIcon(FontAwesomeIcons.twitter)),
           SizedBox(height: size.height * 0.02),
           buildRowDivider(size: size),
           Padding(padding: EdgeInsets.only(bottom: size.height * 0.02)),
@@ -119,76 +126,5 @@ class SignInPage extends StatelessWidget {
         Expanded(child: Divider(color: Constants.WHITE)),
       ]),
     );
-  }
-}
-
-class GoogleSignIn extends StatefulWidget {
-  GoogleSignIn({Key? key}) : super(key: key);
-
-  @override
-  _GoogleSignInState createState() => _GoogleSignInState();
-}
-
-class _GoogleSignInState extends State<GoogleSignIn> {
-  bool isLoading = false;
-
-  @override
-  Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    return !isLoading
-        ? SizedBox(
-            width: size.width * 0.8,
-            child: OutlinedButton.icon(
-              icon: FaIcon(FontAwesomeIcons.google),
-              onPressed: () async {
-                setState(() {
-                  isLoading = true;
-                });
-                FirebaseService service = new FirebaseService();
-                try {
-                  await service.signInwithGoogle();
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, Constants.ROUTE_HOME, (route) => false);
-                } catch (e) {
-                  if (e is FirebaseAuthException) {
-                    print(e.message);
-                    showMessage(e.message!);
-                  }
-                }
-                setState(() {
-                  isLoading = false;
-                });
-              },
-              label: const Text(
-                Constants.SIGNINGOOGLE,
-                style: TextStyle(
-                    color: Constants.BLACK, fontWeight: FontWeight.bold),
-              ),
-              style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(Constants.WHITE),
-                  side: MaterialStateProperty.all<BorderSide>(BorderSide.none)),
-            ),
-          )
-        : const CircularProgressIndicator();
-  }
-
-  void showMessage(String message) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text("Error"),
-            content: Text(message),
-            actions: [
-              TextButton(
-                child: const Text("Ok"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              )
-            ],
-          );
-        });
   }
 }

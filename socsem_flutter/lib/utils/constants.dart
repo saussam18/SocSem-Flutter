@@ -14,6 +14,7 @@ const String SIGNINSUBTITLE = "Excited to see you again";
 const String SIGNINREDIRECT = "Don't have an account? ";
 const String SIGNINREDIRECTSIGNUP = "Sign Up Here";
 const String SIGNINGOOGLE = "Sign In with Google";
+const String SIGNINTWITTER = "Sign In with TWITTER";
 const String ROUTE_SIGNIN = "/sign-in";
 const String ROUTE_HOME = '/home';
 const Color PRIMARY = Color.fromRGBO(177, 0, 0, 60);
