@@ -1,7 +1,8 @@
 import 'dart:async';
-
+import 'package:socsem_flutter/utils/constants.dart' as Constants;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:socsem_flutter/services/FirebaseService.dart';
 import 'package:socsem_flutter/widgets/button_widget.dart';
 
 class ReadingTimerPage extends StatefulWidget {
@@ -68,12 +69,25 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
           backgroundImage: NetworkImage(user.photoURL!),
           radius: 20,
         ),
-        SizedBox(height: size.height * 0.20),
+        SizedBox(height: size.height * 0.10),
         buildTime(context),
         SizedBox(height: size.height * 0.10),
-        buildButtons(context)
+        buildButtons(context),
+        SizedBox(height: size.height * 0.10),
+        buildTempSignoput(context)
       ]),
     );
+  }
+
+  Widget buildTempSignoput(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    return ButtonWidget(
+        text: "Sign Out",
+        onClicked: () async {
+          FirebaseService service = new FirebaseService();
+          await service.signOutFromGoogle();
+          Navigator.pushReplacementNamed(context, Constants.ROUTE_INTRO);
+        });
   }
 
   Widget buildTime(BuildContext context) {

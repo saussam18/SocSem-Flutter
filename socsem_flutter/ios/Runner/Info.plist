@@ -10,6 +10,7 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>com.googleusercontent.apps.838419536430-925p097mbtprpcfu3i0j3phq18t7i3ac</string>
+				<string>socsem-auth</string>
 			</array>
 		</dict>
 	</array>

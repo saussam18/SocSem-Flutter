@@ -37,9 +37,9 @@ class FirebaseService {
 
   Future<Resource?> signInWithTwitter() async {
     final twitterLogin = TwitterLogin(
-      apiKey: "is2eH7ypavkWaaERntwp43Xa8",
-      apiSecretKey: "tYC09yO736yMEL6cBOCKU1vga5LHXZ7FDQS2XPF2ndquDgu4eY",
-      redirectURI: "twitter-firebase-auth://",
+      apiKey: "9kpqApnItCH7wRWRVtQkRAbnD",
+      apiSecretKey: "7ShIvnvOP8BtttijvG5Hj6dOptirAfV2PFZ1qi17dALcoejqGo",
+      redirectURI: "socsem-auth://",
     );
     final authResult = await twitterLogin.login();
 

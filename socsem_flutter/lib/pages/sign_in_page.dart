@@ -27,24 +27,24 @@ class SignInPage extends StatelessWidget {
                     style: TextStyle(
                       color: Constants.WHITE,
                       fontWeight: FontWeight.bold,
-                      fontSize: 30.0,
+                      fontSize: 26.0,
                     )),
               ])),
-          SizedBox(height: size.height * 0.02),
+          SizedBox(height: size.height * 0.01),
           const Text(
             Constants.SIGNINSUBTITLE,
             style: TextStyle(color: Constants.WHITE),
           ),
-          SizedBox(height: size.height * 0.02),
+          SizedBox(height: size.height * 0.01),
           SignInButton(
               loginType: LoginType.Google,
               faIcon: FaIcon(FontAwesomeIcons.google)),
           SignInButton(
               loginType: LoginType.Twitter,
               faIcon: FaIcon(FontAwesomeIcons.twitter)),
-          SizedBox(height: size.height * 0.02),
+          SizedBox(height: size.height * 0.01),
           buildRowDivider(size: size),
-          Padding(padding: EdgeInsets.only(bottom: size.height * 0.02)),
+          Padding(padding: EdgeInsets.only(bottom: size.height * 0.01)),
           SizedBox(
             width: size.width * 0.8,
             child: TextField(
