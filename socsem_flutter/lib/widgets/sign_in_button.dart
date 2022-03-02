@@ -98,6 +98,7 @@ class _SignInButtonState extends State<SignInButton> {
       }
     } on Exception catch (e) {
       if (e is FirebaseAuthException) {
+        print(e);
         showMessage(e);
       }
     }

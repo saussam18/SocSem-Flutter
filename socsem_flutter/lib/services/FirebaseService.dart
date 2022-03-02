@@ -39,7 +39,7 @@ class FirebaseService {
     final twitterLogin = TwitterLogin(
       apiKey: "9kpqApnItCH7wRWRVtQkRAbnD",
       apiSecretKey: "7ShIvnvOP8BtttijvG5Hj6dOptirAfV2PFZ1qi17dALcoejqGo",
-      redirectURI: "socsem-auth://",
+      redirectURI: 'socsem-auth://',
     );
     final authResult = await twitterLogin.login();
 
@@ -49,7 +49,6 @@ class FirebaseService {
             TwitterAuthProvider.credential(
                 accessToken: authResult.authToken!,
                 secret: authResult.authTokenSecret!);
-
         final userCredential =
             await _auth.signInWithCredential(twitterAuthCredential);
         return Resource(status: Status.Success);
