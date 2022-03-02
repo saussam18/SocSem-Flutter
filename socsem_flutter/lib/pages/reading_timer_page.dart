@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:socsem_flutter/utils/constants.dart' as Constants;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:socsem_flutter/services/FirebaseService.dart';
+import 'package:socsem_flutter/services/firebase_service.dart';
 import 'package:socsem_flutter/widgets/button_widget.dart';
 
 class ReadingTimerPage extends StatefulWidget {
