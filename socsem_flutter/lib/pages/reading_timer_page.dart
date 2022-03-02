@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:socsem_flutter/utils/constants.dart' as Constants;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,9 @@ class ReadingTimerPage extends StatefulWidget {
 class _ReadingTimerPageState extends State<ReadingTimerPage> {
   Duration duration = const Duration();
   Timer? timer;
+  final firestoreInstance = FirebaseFirestore.instance;
+  TextEditingController bookController = TextEditingController();
+  TextEditingController pageController = TextEditingController();
 
   @override
   void initState() {
@@ -56,26 +60,69 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
     timer = Timer.periodic(Duration(seconds: 1), (_) => addTime());
   }
 
+  void saveReadingSession() {
+    var firebaseUser = FirebaseAuth.instance.currentUser;
+    if (pageController.text == '' || bookController.text == '') {
+      showMessage(
+          "Please enter in a book title and a bookmark before stopping the timer");
+      return;
+    }
+    firestoreInstance
+        .collection("reading_sessions")
+        .doc(firebaseUser!.uid)
+        .set({
+      "session_length": duration.inSeconds,
+      "book_name": bookController.text,
+      "page_number": pageController.text,
+      "timestamp": DateTime.now().toUtc().millisecondsSinceEpoch
+    }).then((_) {
+      print("YAY");
+      stopTimer();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     User? user = FirebaseAuth.instance.currentUser;
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Column(children: [
-        SizedBox(height: size.height * 0.20),
-        Text(user!.email!),
-        Text(user.displayName!),
-        CircleAvatar(
-          backgroundImage: NetworkImage(user.photoURL!),
-          radius: 20,
-        ),
+      backgroundColor: Constants.PRIMARY,
+      body: Center(
+          child: Column(children: [
+        SizedBox(height: size.height * 0.10),
+        //Text(user!.email!),
+        //Text(user.displayName!),
+        buildInputBoxes(context, "Book Title", bookController),
+        SizedBox(height: size.height * 0.02),
+        buildInputBoxes(context, "Bookmark", pageController),
         SizedBox(height: size.height * 0.10),
         buildTime(context),
         SizedBox(height: size.height * 0.10),
         buildButtons(context),
         SizedBox(height: size.height * 0.10),
         buildTempSignoput(context)
-      ]),
+      ])),
+    );
+  }
+
+  Widget buildInputBoxes(
+      BuildContext context, String? label, TextEditingController controller) {
+    Size size = MediaQuery.of(context).size;
+    OutlineInputBorder border = const OutlineInputBorder(
+        borderSide: BorderSide(color: Constants.WHITE, width: 3.0));
+    return SizedBox(
+      width: size.width * 0.8,
+      child: TextField(
+          controller: controller,
+          style: const TextStyle(color: Constants.WHITE),
+          decoration: InputDecoration(
+            labelText: label,
+            labelStyle: const TextStyle(color: Constants.WHITE),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
+            enabledBorder: border,
+            focusedBorder: border,
+          )),
     );
   }
 
@@ -145,7 +192,11 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
                 },
               ),
               const SizedBox(width: 12),
-              ButtonWidget(text: 'CANCEL', onClicked: stopTimer)
+              ButtonWidget(
+                  text: 'SAVE',
+                  onClicked: () {
+                    saveReadingSession();
+                  })
             ],
           )
         : ButtonWidget(
@@ -155,5 +206,24 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
             onClicked: () {
               startTimer();
             });
+  }
+
+  void showMessage(String e) {
+    showDialog(
+        context: context,
+        builder: (BuildContext builderContext) {
+          return AlertDialog(
+            title: Text("Error"),
+            content: Text(e),
+            actions: [
+              TextButton(
+                child: Text("Ok"),
+                onPressed: () {
+                  Navigator.of(builderContext).pop();
+                },
+              )
+            ],
+          );
+        });
   }
 }

@@ -50,6 +50,8 @@ class SignInPage extends StatelessWidget {
             child: TextField(
                 style: const TextStyle(color: Constants.WHITE),
                 decoration: InputDecoration(
+                  labelText: "Email",
+                  labelStyle: const TextStyle(color: Constants.WHITE),
                   contentPadding: const EdgeInsets.symmetric(
                       vertical: 15.0, horizontal: 10.0),
                   enabledBorder: border,
@@ -62,7 +64,10 @@ class SignInPage extends StatelessWidget {
           SizedBox(
             width: size.width * 0.8,
             child: TextField(
+              style: const TextStyle(color: Constants.WHITE),
               decoration: InputDecoration(
+                labelText: "Password",
+                labelStyle: const TextStyle(color: Constants.WHITE),
                 contentPadding: const EdgeInsets.symmetric(
                     vertical: 15.0, horizontal: 10.0),
                 enabledBorder: border,
