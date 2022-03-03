@@ -78,6 +78,8 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
     }).then((_) {
       print("YAY");
       stopTimer();
+      bookController.clear();
+      pageController.clear();
     });
   }
 
@@ -97,7 +99,7 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
         buildInputBoxes(context, "Bookmark", pageController),
         SizedBox(height: size.height * 0.10),
         buildTime(context),
-        SizedBox(height: size.height * 0.10),
+        SizedBox(height: size.height * 0.04),
         buildButtons(context),
         SizedBox(height: size.height * 0.10),
         buildTempSignoput(context)
@@ -166,10 +168,13 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
           child: Text(time,
               style: const TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: Constants.BLACK,
                   fontSize: 72))),
       SizedBox(height: size.height * 0.04),
-      Text(header)
+      Text(
+        header,
+        style: const TextStyle(color: Constants.WHITE),
+      )
     ]);
   }
 
@@ -182,7 +187,7 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ButtonWidget(
-                text: isRunning ? 'STOP' : "RESUME",
+                text: isRunning ? 'Stop' : "Resume",
                 onClicked: () {
                   if (isRunning) {
                     stopTimer(resets: false);
@@ -191,18 +196,20 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
                   }
                 },
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: size.width * 0.02),
               ButtonWidget(
-                  text: 'SAVE',
+                  text: 'Save',
                   onClicked: () {
                     saveReadingSession();
-                  })
+                  }),
+              SizedBox(width: size.width * 0.02),
+              ButtonWidget(text: 'Cancel', onClicked: stopTimer),
             ],
           )
         : ButtonWidget(
             text: 'START TIMER!',
-            color: Colors.white,
-            backgroundColor: Colors.black,
+            color: Colors.black,
+            backgroundColor: Colors.white,
             onClicked: () {
               startTimer();
             });

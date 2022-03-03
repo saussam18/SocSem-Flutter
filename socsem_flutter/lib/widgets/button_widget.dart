@@ -15,14 +15,18 @@ class ButtonWidget extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) => ElevatedButton(
-        style: ElevatedButton.styleFrom(
-            primary: backgroundColor ?? Colors.black,
-            padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16)),
-        child: Text(
-          text,
-          style: TextStyle(fontSize: 20, color: color ?? Colors.white),
-        ),
-        onPressed: onClicked,
-      );
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+          primary: backgroundColor ?? Colors.white,
+          padding: EdgeInsets.symmetric(
+              horizontal: size.width * .05, vertical: size.height * .02)),
+      child: Text(
+        text,
+        style: TextStyle(fontSize: 16, color: color ?? Colors.black),
+      ),
+      onPressed: onClicked,
+    );
+  }
 }
