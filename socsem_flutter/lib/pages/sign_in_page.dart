@@ -6,7 +6,18 @@ import 'package:socsem_flutter/utils/constants.dart' as Constants;
 import 'package:socsem_flutter/utils/resource.dart';
 import 'package:socsem_flutter/widgets/sign_in_button.dart';
 
-class SignInPage extends StatelessWidget {
+class SigninPage extends StatefulWidget {
+  @override
+  _SignInPageState createState() => _SignInPageState();
+}
+
+class _SignInPageState extends State<SigninPage> {
+  FirebaseService service = new FirebaseService();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  bool loading = true;
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -45,26 +56,49 @@ class SignInPage extends StatelessWidget {
           SizedBox(height: size.height * 0.01),
           buildRowDivider(size: size),
           Padding(padding: EdgeInsets.only(bottom: size.height * 0.01)),
+          buildEmailSignInForm(size: size, border: border)
+        ])));
+  }
+
+  Widget buildEmailSignInForm(
+      {required Size size, required OutlineInputBorder border}) {
+    return Form(
+      key: formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
           SizedBox(
             width: size.width * 0.8,
-            child: TextField(
-                style: const TextStyle(color: Constants.WHITE),
-                decoration: InputDecoration(
-                  labelText: "Email",
-                  labelStyle: const TextStyle(color: Constants.WHITE),
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 15.0, horizontal: 10.0),
-                  enabledBorder: border,
-                  focusedBorder: border,
-                )),
+            child: TextFormField(
+              style: const TextStyle(color: Constants.WHITE),
+              controller: emailController,
+              decoration: InputDecoration(
+                labelText: "Email",
+                labelStyle: const TextStyle(color: Constants.WHITE),
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
+                enabledBorder: border,
+                focusedBorder: border,
+              ),
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Enter Email Address';
+                } else if (!value.contains('@')) {
+                  return 'Please enter a valid email address!';
+                }
+                return null;
+              },
+            ),
           ),
           SizedBox(
             height: size.height * 0.02,
           ),
           SizedBox(
             width: size.width * 0.8,
-            child: TextField(
+            child: TextFormField(
               style: const TextStyle(color: Constants.WHITE),
+              controller: passwordController,
+              obscureText: true,
               decoration: InputDecoration(
                 labelText: "Password",
                 labelStyle: const TextStyle(color: Constants.WHITE),
@@ -81,21 +115,44 @@ class SignInPage extends StatelessWidget {
                   padding: EdgeInsets.only(top: 15, left: 15),
                 ),
               ),
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Enter Password';
+                } else if (value.length < 6) {
+                  return 'Password must be atleast 6 characters!';
+                }
+                return null;
+              },
             ),
           ),
           Padding(padding: EdgeInsets.only(bottom: size.height * 0.01)),
           SizedBox(
             width: size.width * 0.8,
-            child: OutlinedButton(
-              onPressed: () async {},
-              child: const Text(Constants.SIGNIN),
-              style: ButtonStyle(
-                  foregroundColor:
-                      MaterialStateProperty.all<Color>(Constants.BLACK),
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(Constants.SECONDARY),
-                  side: MaterialStateProperty.all<BorderSide>(BorderSide.none)),
-            ),
+            child: loading
+                ? OutlinedButton(
+                    onPressed: () async {
+                      if (formKey.currentState!.validate()) {
+                        setState(() {
+                          loading = false;
+                        });
+                        String? email = await service.signInWithEmail(
+                            emailController.text, passwordController.text);
+                        if (email != null) {
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, Constants.ROUTE_HOME, (route) => false);
+                        }
+                      }
+                    },
+                    child: const Text(Constants.SIGNIN),
+                    style: ButtonStyle(
+                        foregroundColor:
+                            MaterialStateProperty.all<Color>(Constants.BLACK),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Constants.SECONDARY),
+                        side: MaterialStateProperty.all<BorderSide>(
+                            BorderSide.none)),
+                  )
+                : CircularProgressIndicator(),
           ),
           RichText(
               textAlign: TextAlign.center,
@@ -114,7 +171,9 @@ class SignInPage extends StatelessWidget {
                       )),
                 ],
               ))
-        ])));
+        ],
+      ),
+    );
   }
 
   Widget buildRowDivider({required Size size}) {

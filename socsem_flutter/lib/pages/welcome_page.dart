@@ -46,13 +46,7 @@ class WelcomePage extends StatelessWidget {
                   SizedBox(
                     width: size.width * 0.8,
                     child: OutlinedButton(
-                      onPressed: () {
-                        result == null
-                            ? Navigator.pushNamed(
-                                context, Constants.ROUTE_SIGNIN)
-                            : Navigator.pushReplacementNamed(
-                                context, Constants.ROUTE_HOME);
-                      },
+                      onPressed: () {},
                       child: Text(Constants.START),
                       style: ButtonStyle(
                           foregroundColor:
@@ -66,7 +60,13 @@ class WelcomePage extends StatelessWidget {
                   SizedBox(
                     width: size.width * 0.8,
                     child: OutlinedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        result == null
+                            ? Navigator.pushNamed(
+                                context, Constants.ROUTE_SIGNIN)
+                            : Navigator.pushReplacementNamed(
+                                context, Constants.ROUTE_HOME);
+                      },
                       child: const Text(
                         Constants.SIGNIN,
                         style: TextStyle(color: Constants.BLACK),
