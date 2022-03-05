@@ -1,10 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'dart:io' show Platform;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:socsem_flutter/services/firebase_service.dart';
 import 'package:socsem_flutter/utils/constants.dart' as Constants;
 import 'package:socsem_flutter/utils/resource.dart';
 import 'package:socsem_flutter/widgets/sign_in_button.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class SigninPage extends StatefulWidget {
   @override
@@ -16,6 +17,7 @@ class _SignInPageState extends State<SigninPage> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  bool isIos = Platform.isIOS;
   bool loading = true;
 
   @override
@@ -30,6 +32,7 @@ class _SignInPageState extends State<SigninPage> {
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Image.asset('assets/images/logo.png'),
+          SizedBox(height: size.height * .02),
           RichText(
               textAlign: TextAlign.center,
               text: const TextSpan(children: <TextSpan>[
@@ -46,10 +49,9 @@ class _SignInPageState extends State<SigninPage> {
             Constants.SIGNINSUBTITLE,
             style: TextStyle(color: Constants.WHITE),
           ),
-          SizedBox(height: size.height * 0.01),
-          SignInButton(
-              loginType: LoginType.Google,
-              faIcon: FaIcon(FontAwesomeIcons.google)),
+          SizedBox(height: size.height * 0.02),
+          buildGoogleOrAppleButton(context: context, size: size),
+          SizedBox(height: size.height * .01),
           SignInButton(
               loginType: LoginType.Twitter,
               faIcon: FaIcon(FontAwesomeIcons.twitter)),
@@ -58,6 +60,23 @@ class _SignInPageState extends State<SigninPage> {
           Padding(padding: EdgeInsets.only(bottom: size.height * 0.01)),
           buildEmailSignInForm(size: size, border: border)
         ])));
+  }
+
+  Widget buildGoogleOrAppleButton(
+      {required BuildContext context, required Size size}) {
+    return isIos
+        ? SizedBox(
+            width: size.width * 0.8,
+            child: SignInWithAppleButton(
+              onPressed: () async {
+                service.signInWithApple();
+              },
+              height: size.height * 0.045,
+              borderRadius: const BorderRadius.all(Radius.circular(3)),
+            ))
+        : SignInButton(
+            faIcon: FaIcon(FontAwesomeIcons.google),
+            loginType: LoginType.Google);
   }
 
   Widget buildEmailSignInForm(
@@ -108,7 +127,7 @@ class _SignInPageState extends State<SigninPage> {
                 focusedBorder: border,
                 suffixIcon: const Padding(
                   child: FaIcon(
-                    FontAwesomeIcons.eye,
+                    FontAwesomeIcons.lock,
                     color: Constants.WHITE,
                     size: 15,
                   ),
