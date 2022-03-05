@@ -1,3 +1,5 @@
+// ignore_for_file: use_rethrow_when_possible
+
 import 'dart:convert';
 import 'dart:math';
 
@@ -54,6 +56,7 @@ class FirebaseService {
             TwitterAuthProvider.credential(
                 accessToken: authResult.authToken!,
                 secret: authResult.authTokenSecret!);
+        // ignore: unused_local_variable
         final userCredential =
             await _auth.signInWithCredential(twitterAuthCredential);
         return Resource(status: Status.Success);
@@ -84,8 +87,9 @@ class FirebaseService {
   /// Generates a cryptographically secure random nonce, to be included in a
   /// credential request.
   String generateNonce([int length = 32]) {
+    // ignore: prefer_const_declarations
     final charset =
-        '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
+        "0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._";
     final random = Random.secure();
     return List.generate(length, (_) => charset[random.nextInt(charset.length)])
         .join();

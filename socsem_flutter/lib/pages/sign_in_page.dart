@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:io' show Platform;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:socsem_flutter/services/firebase_service.dart';
+// ignore: library_prefixes
 import 'package:socsem_flutter/utils/constants.dart' as Constants;
 import 'package:socsem_flutter/utils/resource.dart';
 import 'package:socsem_flutter/widgets/sign_in_button.dart';
@@ -13,7 +14,7 @@ class SigninPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SigninPage> {
-  FirebaseService service = new FirebaseService();
+  FirebaseService service = FirebaseService();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -54,7 +55,7 @@ class _SignInPageState extends State<SigninPage> {
           SizedBox(height: size.height * .01),
           SignInButton(
               loginType: LoginType.Twitter,
-              faIcon: FaIcon(FontAwesomeIcons.twitter)),
+              faIcon: const FaIcon(FontAwesomeIcons.twitter)),
           SizedBox(height: size.height * 0.01),
           buildRowDivider(size: size),
           Padding(padding: EdgeInsets.only(bottom: size.height * 0.01)),
@@ -75,7 +76,7 @@ class _SignInPageState extends State<SigninPage> {
               borderRadius: const BorderRadius.all(Radius.circular(3)),
             ))
         : SignInButton(
-            faIcon: FaIcon(FontAwesomeIcons.google),
+            faIcon: const FaIcon(FontAwesomeIcons.google),
             loginType: LoginType.Google);
   }
 
@@ -171,7 +172,7 @@ class _SignInPageState extends State<SigninPage> {
                         side: MaterialStateProperty.all<BorderSide>(
                             BorderSide.none)),
                   )
-                : CircularProgressIndicator(),
+                : const CircularProgressIndicator(),
           ),
           RichText(
               textAlign: TextAlign.center,
@@ -198,7 +199,7 @@ class _SignInPageState extends State<SigninPage> {
   Widget buildRowDivider({required Size size}) {
     return SizedBox(
       width: size.width * 0.8,
-      child: Row(children: <Widget>[
+      child: Row(children: const <Widget>[
         Expanded(child: Divider(color: Constants.WHITE)),
         Padding(
             padding: EdgeInsets.only(left: 8.0, right: 8.0),

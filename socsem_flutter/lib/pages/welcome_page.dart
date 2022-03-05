@@ -47,7 +47,7 @@ class WelcomePage extends StatelessWidget {
                     width: size.width * 0.8,
                     child: OutlinedButton(
                       onPressed: () {},
-                      child: Text(Constants.START),
+                      child: const Text(Constants.START),
                       style: ButtonStyle(
                           foregroundColor:
                               MaterialStateProperty.all<Color>(Constants.BLACK),

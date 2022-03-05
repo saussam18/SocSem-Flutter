@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+// ignore: library_prefixes
 import 'package:socsem_flutter/utils/constants.dart' as Constants;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +58,7 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
     if (resets) {
       reset();
     }
-    timer = Timer.periodic(Duration(seconds: 1), (_) => addTime());
+    timer = Timer.periodic(const Duration(seconds: 1), (_) => addTime());
   }
 
   void saveReadingSession() {
@@ -76,7 +77,7 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
       "page_number": pageController.text,
       "timestamp": DateTime.now().toUtc().millisecondsSinceEpoch
     }).then((_) {
-      print("YAY");
+      //print("YAY");
       stopTimer();
       bookController.clear();
       pageController.clear();
@@ -85,7 +86,6 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
 
   @override
   Widget build(BuildContext context) {
-    User? user = FirebaseAuth.instance.currentUser;
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Constants.PRIMARY,
@@ -129,11 +129,10 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
   }
 
   Widget buildTempSignoput(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return ButtonWidget(
         text: "Sign Out",
         onClicked: () async {
-          FirebaseService service = new FirebaseService();
+          FirebaseService service = FirebaseService();
           await service.signOutFromGoogle();
           Navigator.pushReplacementNamed(context, Constants.ROUTE_INTRO);
         });
@@ -220,11 +219,11 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
         context: context,
         builder: (BuildContext builderContext) {
           return AlertDialog(
-            title: Text("Error"),
+            title: const Text("Error"),
             content: Text(e),
             actions: [
               TextButton(
-                child: Text("Ok"),
+                child: const Text("Ok"),
                 onPressed: () {
                   Navigator.of(builderContext).pop();
                 },
