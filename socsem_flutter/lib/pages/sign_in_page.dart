@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:io' show Platform;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -53,9 +54,9 @@ class _SignInPageState extends State<SigninPage> {
           SizedBox(height: size.height * 0.02),
           buildGoogleOrAppleButton(context: context, size: size),
           SizedBox(height: size.height * .01),
-          SignInButton(
+          const SignInButton(
               loginType: LoginType.Twitter,
-              faIcon: const FaIcon(FontAwesomeIcons.twitter)),
+              faIcon: FaIcon(FontAwesomeIcons.twitter)),
           SizedBox(height: size.height * 0.01),
           buildRowDivider(size: size),
           Padding(padding: EdgeInsets.only(bottom: size.height * 0.01)),
@@ -70,13 +71,17 @@ class _SignInPageState extends State<SigninPage> {
             width: size.width * 0.8,
             child: SignInWithAppleButton(
               onPressed: () async {
-                service.signInWithApple();
+                UserCredential appleUser = await service.signInWithApple();
+                if (appleUser.user != null) {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, Constants.ROUTE_HOME, (route) => false);
+                }
               },
               height: size.height * 0.045,
               borderRadius: const BorderRadius.all(Radius.circular(3)),
             ))
-        : SignInButton(
-            faIcon: const FaIcon(FontAwesomeIcons.google),
+        : const SignInButton(
+            faIcon: FaIcon(FontAwesomeIcons.google),
             loginType: LoginType.Google);
   }
 

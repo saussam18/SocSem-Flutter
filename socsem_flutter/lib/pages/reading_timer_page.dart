@@ -68,15 +68,18 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
           "Please enter in a book title and a bookmark before stopping the timer");
       return;
     }
+    var session = [
+      {
+        "session_length": duration.inSeconds,
+        "book_name": bookController.text,
+        "page_number": pageController.text,
+        "timestamp": DateTime.now().toUtc().millisecondsSinceEpoch
+      }
+    ];
     firestoreInstance
         .collection("reading_sessions")
         .doc(firebaseUser!.uid)
-        .set({
-      "session_length": duration.inSeconds,
-      "book_name": bookController.text,
-      "page_number": pageController.text,
-      "timestamp": DateTime.now().toUtc().millisecondsSinceEpoch
-    }).then((_) {
+        .update({"sessions": FieldValue.arrayUnion(session)}).then((_) {
       //print("YAY");
       stopTimer();
       bookController.clear();
@@ -147,11 +150,11 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        buildTimeCard(context, time: hours, header: "HOURS"),
+        buildTimeCard(context, time: hours, header: "Hours"),
         SizedBox(width: size.width * 0.01),
-        buildTimeCard(context, time: minutes, header: "MINUTES"),
+        buildTimeCard(context, time: minutes, header: "Minutes"),
         SizedBox(width: size.width * 0.01),
-        buildTimeCard(context, time: seconds, header: "SECONDS"),
+        buildTimeCard(context, time: seconds, header: "Seconds"),
       ],
     );
   }
@@ -206,7 +209,7 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
             ],
           )
         : ButtonWidget(
-            text: 'START TIMER!',
+            text: 'Start Timer',
             color: Colors.black,
             backgroundColor: Colors.white,
             onClicked: () {
