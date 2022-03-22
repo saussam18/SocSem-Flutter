@@ -80,7 +80,6 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
         .collection("reading_sessions")
         .doc(firebaseUser!.uid)
         .update({"sessions": FieldValue.arrayUnion(session)}).then((_) {
-      //print("YAY");
       stopTimer();
       bookController.clear();
       pageController.clear();
@@ -91,6 +90,53 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      appBar: AppBar(
+        title: SizedBox(
+            height: kToolbarHeight - 10,
+            child: Image.asset('assets/images/logo.png')),
+        backgroundColor: Constants.PRIMARY_D,
+      ),
+      drawer: Drawer(
+          backgroundColor: Constants.WHITE_D,
+          child: ListView(padding: EdgeInsets.zero, children: [
+            DrawerHeader(
+                child: Container(
+                  child: Column(
+                    children: [
+                      const Icon(
+                        Icons.sentiment_satisfied_alt_rounded,
+                        color: Constants.WHITE_D,
+                        size: 80,
+                        semanticLabel: "Profile Pic",
+                      ),
+                      SizedBox(height: size.width * .05),
+                      const Text("Profiles Coming Soon!",
+                          style: TextStyle(color: Constants.WHITE_D))
+                    ],
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                  ),
+                ),
+                decoration: const BoxDecoration(color: Constants.PRIMARY_D)),
+            ListTile(
+                title: const Text('Reading Log'),
+                focusColor: Colors.grey,
+                onTap: () {}),
+            const Divider(),
+            ListTile(
+                title: const Text('Leave Feedback'),
+                focusColor: Colors.grey,
+                onTap: () {}),
+            const Divider(),
+            ListTile(
+                title: const Text('Sign Out'),
+                onTap: () async {
+                  FirebaseService service = FirebaseService();
+                  await service.signOutFromGoogle();
+                  Navigator.pushReplacementNamed(
+                      context, Constants.ROUTE_INTRO);
+                }),
+            const Divider(),
+          ])),
       backgroundColor: Constants.PRIMARY,
       body: Center(
           child: Column(children: [
@@ -105,7 +151,7 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
         SizedBox(height: size.height * 0.04),
         buildButtons(context),
         SizedBox(height: size.height * 0.10),
-        buildTempSignoput(context)
+        //buildTempSignoput(context)
       ])),
     );
   }

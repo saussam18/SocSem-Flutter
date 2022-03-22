@@ -19,8 +19,10 @@ const String ROUTE_SIGNIN = "/sign-in";
 const String ROUTE_HOME = '/home';
 const String ROUTE_INTRO = '/';
 const Color PRIMARY = Color.fromRGBO(177, 0, 0, 60);
+const Color PRIMARY_D = Color.fromRGBO(177, 0, 0, 1);
 const Color SECONDARY = Color.fromRGBO(250, 212, 4, 10);
 const Color BLACK = Color.fromRGBO(0, 0, 0, 10);
 const Color WHITE = Color.fromRGBO(255, 255, 255, 10);
+const Color WHITE_D = Color.fromRGBO(255, 255, 255, 1);
 const STATUS_BAR_COLOR = SystemUiOverlayStyle(
     statusBarColor: PRIMARY, statusBarIconBrightness: Brightness.dark);
