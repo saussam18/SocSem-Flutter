@@ -120,7 +120,9 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
             ListTile(
                 title: const Text('Reading Log'),
                 focusColor: Colors.grey,
-                onTap: () {}),
+                onTap: () {
+                  Navigator.pushNamed(context, '/log');
+                }),
             const Divider(),
             ListTile(
                 title: const Text('Leave Feedback'),
