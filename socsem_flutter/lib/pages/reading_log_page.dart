@@ -56,6 +56,7 @@ class _ReadingLogPageState extends State<ReadingLogPage> {
 
   ListTile buildListTile(var session) {
     Size size = MediaQuery.of(context).size;
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
     DateTime date =
         new DateTime.fromMillisecondsSinceEpoch(session["timestamp"]);
     Duration dur = Duration(seconds: session["session_length"]);
@@ -82,12 +83,12 @@ class _ReadingLogPageState extends State<ReadingLogPage> {
               ),
               SizedBox(height: size.height * 0.02),
               Text(
-                  "Session Length: " +
-                      dur.inHours.toString() +
+                  "Length: " +
+                      twoDigits(dur.inHours) +
                       ":" +
-                      dur.inMinutes.toString() +
+                      twoDigits(dur.inMinutes) +
                       ":" +
-                      dur.inSeconds.toString(),
+                      twoDigits(dur.inSeconds),
                   style: const TextStyle(color: Constants.BLACK))
             ],
           )),

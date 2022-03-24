@@ -127,7 +127,9 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
             ListTile(
                 title: const Text('Leave Feedback'),
                 focusColor: Colors.grey,
-                onTap: () {}),
+                onTap: () {
+                  Navigator.pushNamed(context, '/feedback');
+                }),
             const Divider(),
             ListTile(
                 title: const Text('Sign Out'),

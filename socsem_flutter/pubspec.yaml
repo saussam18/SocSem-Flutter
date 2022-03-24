@@ -45,6 +45,7 @@ dependencies:
   google_sign_in: ^5.2.4
   twitter_login: ^4.0.1
   font_awesome_flutter: ^9.0.0
+  flutter_email_sender: ^5.1.0
 
 dev_dependencies:
   flutter_test:
