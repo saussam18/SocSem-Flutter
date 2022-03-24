@@ -9,12 +9,14 @@ import 'package:socsem_flutter/utils/resource.dart';
 import 'package:socsem_flutter/widgets/sign_in_button.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
-class SigninPage extends StatefulWidget {
+// READ: This is temporary to just change the names of sign in. All the code is the same outside of the text
+
+class SignupPage extends StatefulWidget {
   @override
-  _SignInPageState createState() => _SignInPageState();
+  _SignUpPageState createState() => _SignUpPageState();
 }
 
-class _SignInPageState extends State<SigninPage> {
+class _SignUpPageState extends State<SignupPage> {
   FirebaseService service = FirebaseService();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
@@ -31,7 +33,7 @@ class _SignInPageState extends State<SigninPage> {
         appBar: AppBar(
             backgroundColor: Constants.PRIMARY,
             title:
-                const Text("Sign In", style: TextStyle(color: Constants.WHITE)),
+                const Text("Sign Up", style: TextStyle(color: Constants.WHITE)),
             leading: IconButton(
                 icon: const Icon(Icons.arrow_back_ios),
                 onPressed: () {
@@ -39,7 +41,7 @@ class _SignInPageState extends State<SigninPage> {
                 })),
         resizeToAvoidBottomInset: false,
         backgroundColor: Constants.PRIMARY,
-        body: Center(
+        body: Container(
             child: Column(children: [
           SizedBox(height: size.height * .05),
           Image.asset('assets/images/logo.png'),
@@ -48,7 +50,7 @@ class _SignInPageState extends State<SigninPage> {
               textAlign: TextAlign.center,
               text: const TextSpan(children: <TextSpan>[
                 TextSpan(
-                    text: Constants.SIGNINTITLE,
+                    text: "Build Your Reading Habit",
                     style: TextStyle(
                       color: Constants.WHITE,
                       fontWeight: FontWeight.bold,
@@ -57,7 +59,7 @@ class _SignInPageState extends State<SigninPage> {
               ])),
           SizedBox(height: size.height * 0.01),
           const Text(
-            Constants.SIGNINSUBTITLE,
+            "Sign Up for SocSem Today",
             style: TextStyle(color: Constants.WHITE),
           ),
           SizedBox(height: size.height * 0.02),
@@ -66,7 +68,7 @@ class _SignInPageState extends State<SigninPage> {
           const SignInButton(
             loginType: LoginType.Twitter,
             faIcon: FaIcon(FontAwesomeIcons.twitter),
-            signin: true,
+            signin: false,
           ),
           SizedBox(height: size.height * 0.01),
           buildRowDivider(size: size),
@@ -84,6 +86,7 @@ class _SignInPageState extends State<SigninPage> {
         ? SizedBox(
             width: size.width * 0.8,
             child: SignInWithAppleButton(
+              text: "Sign Up with Apple",
               onPressed: () async {
                 UserCredential appleUser = await service.signInWithApple();
                 if (appleUser.user != null) {
@@ -97,7 +100,7 @@ class _SignInPageState extends State<SigninPage> {
         : const SignInButton(
             faIcon: FaIcon(FontAwesomeIcons.google),
             loginType: LoginType.Google,
-            signin: true,
+            signin: false,
           );
   }
 

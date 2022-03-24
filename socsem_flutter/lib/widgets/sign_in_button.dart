@@ -9,8 +9,13 @@ import 'package:socsem_flutter/utils/resource.dart';
 class SignInButton extends StatefulWidget {
   final FaIcon faIcon;
   final LoginType loginType;
+  final bool signin;
 
-  const SignInButton({Key? key, required this.faIcon, required this.loginType})
+  const SignInButton(
+      {Key? key,
+      required this.faIcon,
+      required this.loginType,
+      required this.signin})
       : super(key: key);
 
   @override
@@ -37,13 +42,21 @@ class _SignInButtonState extends State<SignInButton> {
                   isLoading = false;
                 });
               },
-              label: Text(
-                widget.loginType == LoginType.Google
-                    ? Constants.SIGNINGOOGLE
-                    : Constants.SIGNINTWITTER,
-                style: const TextStyle(
-                    color: Constants.BLACK, fontWeight: FontWeight.bold),
-              ),
+              label: widget.signin
+                  ? Text(
+                      widget.loginType == LoginType.Google
+                          ? Constants.SIGNINGOOGLE
+                          : Constants.SIGNINTWITTER,
+                      style: const TextStyle(
+                          color: Constants.BLACK, fontWeight: FontWeight.bold),
+                    )
+                  : Text(
+                      widget.loginType == LoginType.Google
+                          ? Constants.SIGNUPGOOGLE
+                          : Constants.SIGNUPTWITTER,
+                      style: const TextStyle(
+                          color: Constants.BLACK, fontWeight: FontWeight.bold),
+                    ),
               style: ButtonStyle(
                   backgroundColor:
                       MaterialStateProperty.all<Color>(Constants.WHITE),
