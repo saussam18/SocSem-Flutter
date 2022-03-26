@@ -18,11 +18,9 @@ class _LeaveFeedbackState extends State<LeaveFeedbackPage> {
     text: 'socsem.contact@gmail.com',
   );
 
-  final _subjectController = TextEditingController(text: 'INSERT SUBJECT HERE');
+  final _subjectController = TextEditingController();
 
-  final _bodyController = TextEditingController(
-    text: 'WRITE EMAIL HERE',
-  );
+  final _bodyController = TextEditingController();
 
   Future<void> send() async {
     final Email email = Email(
@@ -57,7 +55,7 @@ class _LeaveFeedbackState extends State<LeaveFeedbackPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Constants.PRIMARY,
-        title: const Text('Plugin example app'),
+        title: const Text('Email Feedback'),
         actions: <Widget>[
           IconButton(
             onPressed: () {

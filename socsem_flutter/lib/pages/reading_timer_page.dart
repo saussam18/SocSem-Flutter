@@ -1,11 +1,15 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 // ignore: library_prefixes
 import 'package:socsem_flutter/utils/constants.dart' as Constants;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:socsem_flutter/services/firebase_service.dart';
 import 'package:socsem_flutter/widgets/button_widget.dart';
+
+import '../utils/util_methods.dart';
 
 class ReadingTimerPage extends StatefulWidget {
   @override
@@ -64,8 +68,9 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
   void saveReadingSession() {
     var firebaseUser = FirebaseAuth.instance.currentUser;
     if (pageController.text == '' || bookController.text == '') {
-      showMessage(
-          "Please enter in a book title and a bookmark before stopping the timer");
+      showMessage(context, "No Input Data",
+          "Please enter in a book title and a bookmark before attempting to save the reading session");
+
       return;
     }
     var session = [
@@ -76,10 +81,9 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
         "timestamp": DateTime.now().toUtc().millisecondsSinceEpoch
       }
     ];
-    firestoreInstance
-        .collection("reading_sessions")
-        .doc(firebaseUser!.uid)
-        .update({"sessions": FieldValue.arrayUnion(session)}).then((_) {
+    firestoreInstance.collection("reading_sessions").doc(firebaseUser!.uid).set(
+        {"sessions": FieldValue.arrayUnion(session)},
+        SetOptions(merge: true)).then((_) {
       stopTimer();
       bookController.clear();
       pageController.clear();
@@ -90,74 +94,104 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        title: SizedBox(
-            height: kToolbarHeight - 10,
-            child: Image.asset('assets/images/logo.png')),
-        backgroundColor: Constants.PRIMARY_D,
-      ),
-      drawer: Drawer(
-          backgroundColor: Constants.WHITE_D,
-          child: ListView(padding: EdgeInsets.zero, children: [
-            DrawerHeader(
-                child: Container(
-                  child: Column(
-                    children: [
-                      const Icon(
-                        Icons.sentiment_satisfied_alt_rounded,
-                        color: Constants.WHITE_D,
-                        size: 80,
-                        semanticLabel: "Profile Pic",
-                      ),
-                      SizedBox(height: size.width * .05),
-                      const Text("Profiles Coming Soon!",
-                          style: TextStyle(color: Constants.WHITE_D))
-                    ],
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                  ),
-                ),
-                decoration: const BoxDecoration(color: Constants.PRIMARY_D)),
-            ListTile(
-                title: const Text('Reading Log'),
-                focusColor: Colors.grey,
-                onTap: () {
-                  Navigator.pushNamed(context, '/log');
-                }),
-            const Divider(),
-            ListTile(
-                title: const Text('Leave Feedback'),
-                focusColor: Colors.grey,
-                onTap: () {
-                  Navigator.pushNamed(context, '/feedback');
-                }),
-            const Divider(),
-            ListTile(
-                title: const Text('Sign Out'),
-                onTap: () async {
-                  FirebaseService service = FirebaseService();
-                  await service.signOutFromGoogle();
-                  Navigator.pushReplacementNamed(
-                      context, Constants.ROUTE_INTRO);
-                }),
-            const Divider(),
+        resizeToAvoidBottomInset: false,
+        appBar: buildAppBar(),
+        drawer: buildDrawer(),
+        backgroundColor: Constants.PRIMARY,
+        body: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(FocusNode());
+          },
+          child: Center(
+              child: Column(children: [
+            SizedBox(height: size.height * 0.04),
+            RichText(
+                textAlign: TextAlign.center,
+                text: const TextSpan(children: <TextSpan>[
+                  TextSpan(
+                      text: "Start",
+                      style: TextStyle(
+                        color: Constants.WHITE,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 40.0,
+                      )),
+                  TextSpan(
+                      text: " Reading",
+                      style: TextStyle(
+                        color: Constants.WHITE,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 40.0,
+                      ))
+                ])),
+            SizedBox(height: size.height * 0.04),
+            buildInputBoxes(context, "Book Title", bookController),
+            SizedBox(height: size.height * 0.02),
+            buildInputBoxes(context, "Bookmark", pageController),
+            SizedBox(height: size.height * 0.05),
+            buildTime(context),
+            SizedBox(height: size.height * 0.05),
+            buildButtons(context),
+            SizedBox(height: size.height * 0.05),
+            buildAddNoteButton(context)
           ])),
-      backgroundColor: Constants.PRIMARY,
-      body: Center(
-          child: Column(children: [
-        SizedBox(height: size.height * 0.10),
-        //Text(user!.email!),
-        //Text(user.displayName!),
-        buildInputBoxes(context, "Book Title", bookController),
-        SizedBox(height: size.height * 0.02),
-        buildInputBoxes(context, "Bookmark", pageController),
-        SizedBox(height: size.height * 0.10),
-        buildTime(context),
-        SizedBox(height: size.height * 0.04),
-        buildButtons(context),
-        SizedBox(height: size.height * 0.10),
-        //buildTempSignoput(context)
-      ])),
+        ));
+  }
+
+  AppBar buildAppBar() {
+    return AppBar(
+      title: SizedBox(
+          height: kToolbarHeight - 10,
+          child: Image.asset('assets/images/logo.png')),
+      backgroundColor: Constants.PRIMARY_D,
     );
+  }
+
+  Widget buildDrawer() {
+    Size size = MediaQuery.of(context).size;
+    return Drawer(
+        backgroundColor: Constants.WHITE_D,
+        child: ListView(padding: EdgeInsets.zero, children: [
+          DrawerHeader(
+              child: Container(
+                child: Column(
+                  children: [
+                    const Icon(
+                      Icons.sentiment_satisfied_alt_rounded,
+                      color: Constants.WHITE_D,
+                      size: 80,
+                      semanticLabel: "Profile Pic",
+                    ),
+                    SizedBox(height: size.width * .05),
+                    const Text("Profiles Coming Soon!",
+                        style: TextStyle(color: Constants.WHITE_D))
+                  ],
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                ),
+              ),
+              decoration: const BoxDecoration(color: Constants.PRIMARY_D)),
+          ListTile(
+              title: const Text('Reading Log'),
+              focusColor: Colors.grey,
+              onTap: () {
+                Navigator.pushNamed(context, '/log');
+              }),
+          const Divider(),
+          ListTile(
+              title: const Text('Leave Feedback'),
+              focusColor: Colors.grey,
+              onTap: () {
+                Navigator.pushNamed(context, '/feedback');
+              }),
+          const Divider(),
+          ListTile(
+              title: const Text('Sign Out'),
+              onTap: () async {
+                FirebaseService service = FirebaseService();
+                await service.signOutFromGoogle();
+                Navigator.pushReplacementNamed(context, Constants.ROUTE_INTRO);
+              }),
+          const Divider(),
+        ]));
   }
 
   Widget buildInputBoxes(
@@ -181,16 +215,6 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
     );
   }
 
-  Widget buildTempSignoput(BuildContext context) {
-    return ButtonWidget(
-        text: "Sign Out",
-        onClicked: () async {
-          FirebaseService service = FirebaseService();
-          await service.signOutFromGoogle();
-          Navigator.pushReplacementNamed(context, Constants.ROUTE_INTRO);
-        });
-  }
-
   Widget buildTime(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     String twoDigits(int n) => n.toString().padLeft(2, '0');
@@ -201,9 +225,9 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         buildTimeCard(context, time: hours, header: "Hours"),
-        SizedBox(width: size.width * 0.01),
+        SizedBox(width: size.width * 0.02),
         buildTimeCard(context, time: minutes, header: "Minutes"),
-        SizedBox(width: size.width * 0.01),
+        SizedBox(width: size.width * 0.02),
         buildTimeCard(context, time: seconds, header: "Seconds"),
       ],
     );
@@ -216,13 +240,14 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
       Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-              color: Colors.white, borderRadius: BorderRadius.circular(20)),
+              color: Constants.SECONDARY,
+              borderRadius: BorderRadius.circular(20)),
           child: Text(time,
               style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Constants.BLACK,
                   fontSize: 72))),
-      SizedBox(height: size.height * 0.04),
+      SizedBox(height: size.height * 0.02),
       Text(
         header,
         style: const TextStyle(color: Constants.WHITE),
@@ -239,7 +264,14 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ButtonWidget(
-                text: isRunning ? 'Stop' : "Resume",
+                  backgroundColor: Constants.WHITE,
+                  text: 'Save Session',
+                  onClicked: () {
+                    saveReadingSession();
+                  }),
+              SizedBox(width: size.width * 0.02),
+              ButtonWidget(
+                text: isRunning ? 'Pause' : "Resume",
                 onClicked: () {
                   if (isRunning) {
                     stopTimer(resets: false);
@@ -249,40 +281,26 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
                 },
               ),
               SizedBox(width: size.width * 0.02),
-              ButtonWidget(
-                  text: 'Save',
-                  onClicked: () {
-                    saveReadingSession();
-                  }),
-              SizedBox(width: size.width * 0.02),
               ButtonWidget(text: 'Cancel', onClicked: stopTimer),
             ],
           )
         : ButtonWidget(
-            text: 'Start Timer',
-            color: Colors.black,
-            backgroundColor: Colors.white,
+            text: 'Start Session',
+            color: Constants.BLACK,
+            backgroundColor: Constants.WHITE,
             onClicked: () {
               startTimer();
             });
   }
 
-  void showMessage(String e) {
-    showDialog(
-        context: context,
-        builder: (BuildContext builderContext) {
-          return AlertDialog(
-            title: const Text("Error"),
-            content: Text(e),
-            actions: [
-              TextButton(
-                child: const Text("Ok"),
-                onPressed: () {
-                  Navigator.of(builderContext).pop();
-                },
-              )
-            ],
-          );
+  Widget buildAddNoteButton(BuildContext context) {
+    return ButtonWidget(
+        text: "Add Note",
+        color: Constants.BLACK,
+        backgroundColor: Constants.SECONDARY,
+        onClicked: () {
+          showMessage(context, "Coming Soon",
+              "Soon you will be able to record audio notes within your reading session and review them later");
         });
   }
 }

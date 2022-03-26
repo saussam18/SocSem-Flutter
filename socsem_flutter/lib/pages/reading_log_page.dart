@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:socsem_flutter/utils/constants.dart' as Constants;
+import 'package:socsem_flutter/utils/util_methods.dart';
 
 class ReadingLogPage extends StatefulWidget {
   @override
@@ -26,7 +27,7 @@ class _ReadingLogPageState extends State<ReadingLogPage> {
             leading: IconButton(
                 icon: const Icon(Icons.arrow_back_ios),
                 onPressed: () {
-                  Navigator.pushReplacementNamed(context, Constants.ROUTE_HOME);
+                  Navigator.pop(context);
                 })),
         body: StreamBuilder<DocumentSnapshot>(
             stream: firestoreInstance
@@ -34,14 +35,23 @@ class _ReadingLogPageState extends State<ReadingLogPage> {
                 .doc(firebaseUser!.uid)
                 .snapshots(),
             builder: (context, snapshot) {
-              var sessions = snapshot.data?.get("sessions");
-              return ListView.builder(
-                  itemCount: sessions.length,
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemBuilder: (BuildContext context, int index) {
-                    return buildCard(sessions[index]);
-                  });
+              if (snapshot.hasData) {
+                var sessions = snapshot.data.toString().contains("sessions")
+                    ? snapshot.data?.get("sessions")
+                    : "";
+                return ListView.builder(
+                    itemCount: sessions.length,
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemBuilder: (BuildContext context, int index) {
+                      return buildCard(sessions[index]);
+                    });
+              } else if (snapshot.hasError) {
+                showMessage(context, "No Reading Sessions",
+                    "You have not logged any reading sessions, so there is no data to show");
+                return Container();
+              }
+              return LinearProgressIndicator();
             }));
   }
 
@@ -100,7 +110,7 @@ class _ReadingLogPageState extends State<ReadingLogPage> {
         bookmark,
         style: const TextStyle(color: Colors.grey),
       ),
-      trailing: const Icon(Icons.book, color: Constants.BLACK, size: 30),
+      trailing: const Icon(Icons.menu_book, color: Constants.BLACK, size: 50),
     );
   }
 }
