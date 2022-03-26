@@ -9,6 +9,9 @@ class WelcomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     User? result = FirebaseAuth.instance.currentUser;
+    if (result != null) {
+      Navigator.pushReplacementNamed(context, Constants.ROUTE_HOME);
+    }
     return Scaffold(
         backgroundColor: Constants.PRIMARY,
         body: AnnotatedRegion<SystemUiOverlayStyle>(

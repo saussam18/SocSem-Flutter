@@ -52,6 +52,7 @@ class _LeaveFeedbackState extends State<LeaveFeedbackPage> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Constants.PRIMARY,
@@ -66,49 +67,54 @@ class _LeaveFeedbackState extends State<LeaveFeedbackPage> {
           )
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: _recipientController,
-                decoration: const InputDecoration(
-                  border: const OutlineInputBorder(),
-                  labelText: 'Recipient',
+      body: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(FocusNode());
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    controller: _recipientController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Recipient',
+                    ),
+                  ),
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    controller: _subjectController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Subject',
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller: _bodyController,
+                      maxLines: null,
+                      expands: true,
+                      textAlignVertical: TextAlignVertical.top,
+                      decoration: const InputDecoration(
+                          labelText: 'Body', border: OutlineInputBorder()),
+                    ),
+                  ),
+                ),
+                SizedBox(height: size.height * 0.04)
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: _subjectController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Subject',
-                ),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  controller: _bodyController,
-                  maxLines: null,
-                  expands: true,
-                  textAlignVertical: TextAlignVertical.top,
-                  decoration: const InputDecoration(
-                      labelText: 'Body', border: const OutlineInputBorder()),
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
+          )),
     );
   }
 }

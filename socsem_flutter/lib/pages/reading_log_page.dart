@@ -36,9 +36,7 @@ class _ReadingLogPageState extends State<ReadingLogPage> {
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                var sessions = snapshot.data.toString().contains("sessions")
-                    ? snapshot.data?.get("sessions")
-                    : "";
+                var sessions = snapshot.data?.get("sessions");
                 return ListView.builder(
                     itemCount: sessions.length,
                     scrollDirection: Axis.vertical,
@@ -67,8 +65,7 @@ class _ReadingLogPageState extends State<ReadingLogPage> {
   ListTile buildListTile(var session) {
     Size size = MediaQuery.of(context).size;
     String twoDigits(int n) => n.toString().padLeft(2, '0');
-    DateTime date =
-        new DateTime.fromMillisecondsSinceEpoch(session["timestamp"]);
+    DateTime date = DateTime.fromMillisecondsSinceEpoch(session["timestamp"]);
     Duration dur = Duration(seconds: session["session_length"]);
     String title = session["book_name"];
     String bookmark = session["page_number"];
