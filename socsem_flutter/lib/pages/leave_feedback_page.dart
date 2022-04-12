@@ -82,6 +82,7 @@ class _LeaveFeedbackState extends State<LeaveFeedbackPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: TextField(
                     controller: _recipientController,
+                    textCapitalization: TextCapitalization.sentences,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Recipient',
@@ -92,6 +93,7 @@ class _LeaveFeedbackState extends State<LeaveFeedbackPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: TextField(
                     controller: _subjectController,
+                    textCapitalization: TextCapitalization.sentences,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Subject',
@@ -103,6 +105,7 @@ class _LeaveFeedbackState extends State<LeaveFeedbackPage> {
                     padding: const EdgeInsets.all(8.0),
                     child: TextField(
                       controller: _bodyController,
+                      textCapitalization: TextCapitalization.sentences,
                       maxLines: null,
                       expands: true,
                       textAlignVertical: TextAlignVertical.top,

@@ -20,6 +20,7 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
   Duration duration = const Duration();
   Timer? timer;
   DateTime? startingTime;
+  //DateTime? pauseTime;
   final firestoreInstance = FirebaseFirestore.instance;
   TextEditingController bookController = TextEditingController();
   TextEditingController pageController = TextEditingController();
@@ -33,15 +34,18 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
   }
 
   void reset() {
-    setState(() => duration = const Duration());
+    setState(() {
+      startingTime = DateTime.now();
+      duration = const Duration();
+    });
   }
 
-  void stopTimer({bool resets = true}) {
+  void stopTimer(bool resets) {
     // Stops and if Resets is true reset the timer
     if (resets) {
       reset();
     }
-
+    //pauseTime = DateTime.now();
     // Stop the timer from continuing
     setState(() {
       timer?.cancel();
@@ -49,23 +53,39 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
   }
 
   // Increment Time
-  void addTime() {
+  void addTime(bool restart) {
     setState(() {
+      /*if (restart) {
+        seconds -= startingTime!.second;
+        mins -= startingTime!.minute;
+        hours -= startingTime!.hour;
+      }*/
       final seconds = (DateTime.now().second - startingTime!.second);
       final mins = (DateTime.now().minute - startingTime!.minute);
       final hours = (DateTime.now().hour - startingTime!.hour);
-
+      if (hours > 23) {
+        stopTimer(true);
+        return;
+      }
       duration = Duration(hours: hours, minutes: mins, seconds: seconds);
     });
   }
 
-  void startTimer({bool resets = true}) {
-    // If resets is true, reset the timer
+  void restartTimer(bool resets) {
+    if (resets) {
+      reset();
+    }
+    timer = Timer.periodic(const Duration(seconds: 1), (time) {
+      addTime(true);
+    });
+  }
+
+  void startTimer(bool resets) {
     if (resets) {
       reset();
     }
     startingTime = DateTime.now();
-    timer = Timer.periodic(const Duration(seconds: 1), (_) => addTime());
+    timer = Timer.periodic(const Duration(seconds: 1), (_) => addTime(false));
   }
 
   void saveReadingSession() {
@@ -87,7 +107,7 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
     firestoreInstance.collection("reading_sessions").doc(firebaseUser!.uid).set(
         {"sessions": FieldValue.arrayUnion(session)},
         SetOptions(merge: true)).then((_) {
-      stopTimer();
+      stopTimer(true);
       bookController.clear();
       pageController.clear();
     });
@@ -206,6 +226,7 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
       width: size.width * 0.8,
       child: TextField(
           controller: controller,
+          textCapitalization: TextCapitalization.sentences,
           style: const TextStyle(color: Constants.WHITE),
           decoration: InputDecoration(
             labelText: label,
@@ -242,14 +263,18 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
     return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
       Container(
           padding: const EdgeInsets.all(8),
+          width: size.width * 0.29,
+          height: size.height * 0.12,
           decoration: BoxDecoration(
               color: Constants.SECONDARY,
               borderRadius: BorderRadius.circular(20)),
-          child: Text(time,
-              style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Constants.BLACK,
-                  fontSize: 72))),
+          child: FittedBox(
+              fit: BoxFit.none,
+              child: Text(time,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Constants.BLACK,
+                      fontSize: 72)))),
       SizedBox(height: size.height * 0.02),
       Text(
         header,
@@ -273,18 +298,23 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
                     saveReadingSession();
                   }),
               SizedBox(width: size.width * 0.02),
-              ButtonWidget(
+              /*ButtonWidget(
                 text: isRunning ? 'Pause' : "Resume",
                 onClicked: () {
                   if (isRunning) {
-                    stopTimer(resets: false);
+                    stopTimer(false);
+                    sleep(const Duration(seconds: 1));
                   } else {
-                    startTimer(resets: false);
+                    restartTimer(false);
                   }
                 },
-              ),
+              ), */
               SizedBox(width: size.width * 0.02),
-              ButtonWidget(text: 'Cancel', onClicked: stopTimer),
+              ButtonWidget(
+                  text: 'Cancel',
+                  onClicked: () {
+                    stopTimer(true);
+                  }),
             ],
           )
         : ButtonWidget(
@@ -292,7 +322,7 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
             color: Constants.BLACK,
             backgroundColor: Constants.WHITE,
             onClicked: () {
-              startTimer();
+              startTimer(true);
             });
   }
 
