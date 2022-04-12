@@ -19,6 +19,7 @@ class ReadingTimerPage extends StatefulWidget {
 class _ReadingTimerPageState extends State<ReadingTimerPage> {
   Duration duration = const Duration();
   Timer? timer;
+  DateTime? startingTime;
   final firestoreInstance = FirebaseFirestore.instance;
   TextEditingController bookController = TextEditingController();
   TextEditingController pageController = TextEditingController();
@@ -49,11 +50,12 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
 
   // Increment Time
   void addTime() {
-    const addSeconds = 1;
-
     setState(() {
-      final seconds = duration.inSeconds + addSeconds;
-      duration = Duration(seconds: seconds);
+      final seconds = (DateTime.now().second - startingTime!.second);
+      final mins = (DateTime.now().minute - startingTime!.minute);
+      final hours = (DateTime.now().hour - startingTime!.hour);
+
+      duration = Duration(hours: hours, minutes: mins, seconds: seconds);
     });
   }
 
@@ -62,6 +64,7 @@ class _ReadingTimerPageState extends State<ReadingTimerPage> {
     if (resets) {
       reset();
     }
+    startingTime = DateTime.now();
     timer = Timer.periodic(const Duration(seconds: 1), (_) => addTime());
   }
 
